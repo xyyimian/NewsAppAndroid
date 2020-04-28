@@ -1,11 +1,16 @@
 package com.example.newsapp;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.newsapp.ui.home.HomeFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -14,10 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private ArrayList<Card> cardlist;
+    Context context;
 
     public CardAdapter(Context context,ArrayList<Card> cardlist){
         this.cardlist = cardlist;
-
+        this.context = context;
     }
 
 
@@ -51,6 +57,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         holder.tv_cardTitle.setText(cardlist.get(position).getTitle());
         holder.tv_cardTime.setText(cardlist.get(position).getTime());
         holder.tv_cardSection.setText(cardlist.get(position).getSection());
+        if(cardlist.get(position).getImgurl().compareTo("")!=0){
+            //Log.d("Imgurl", "cardlist.get(position).getImgurl(): "+cardlist.get(position).getImgurl());
+            Picasso.with(context).load(cardlist.get(position).getImgurl()).noPlaceholder().into(holder.iv_cardImage);
+        }else{
+
+        }
+
     }
 
     @Override
