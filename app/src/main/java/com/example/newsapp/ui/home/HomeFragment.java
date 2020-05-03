@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -36,6 +38,10 @@ public class HomeFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerView.Adapter myAdapter;
     RecyclerView.LayoutManager layoutManager;
+    RequestQueue requestQueue;
+    Context context;
+    TextView tv_weatherCity,tv_weatherTemp,tv_weatherSummary;
+    LinearLayout ll_weathercard;
     ArrayList<Card> cardlist;
 
     private HomeViewModel homeViewModel;
@@ -43,18 +49,62 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+                ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        //final TextView text_home = root.findViewById(R.id.text_home);
-//        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
-        final Context context = getActivity().getApplicationContext();
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String url ="https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&cat=home";
+        context = getActivity().getApplicationContext();
+        requestQueue = Volley.newRequestQueue(context);
+        tv_weatherCity = root.findViewById(R.id.tv_weatherCity);
+        tv_weatherTemp = root.findViewById(R.id.tv_weatherTemp);
+        tv_weatherSummary = root.findViewById(R.id.tv_weatherSummary);
+        ll_weathercard = root.findViewById(R.id.ll_weathercard);
+        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                tv_weatherCity.setText(s);
+                String weatherurl = "https://api.openweathermap.org/data/2.5/weather?q="+s+"&units=metric&appid=0d4483a90645a0ebcf9a8ea11ce529eb";
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.GET, weatherurl, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                //get res
+                                int temp = (int) response.optJSONObject("main").optDouble("temp");
+                                String weather = response.optJSONArray("weather").optJSONObject(0).optString("main");
+                                tv_weatherTemp.setText(Integer.toString(temp)+" °C");
+                                tv_weatherSummary.setText(weather);
+                                switch(weather){
+                                    case "Clouds":
+                                        ll_weathercard.setBackgroundResource(R.drawable.cloudy_weather);
+                                        break;
+                                    case "Clear":
+                                        ll_weathercard.setBackgroundResource(R.drawable.clear_weather);
+                                        break;
+                                    case "Snow":
+                                        ll_weathercard.setBackgroundResource(R.drawable.snowy_weather);
+                                        break;
+                                    case "Rain":
+                                    case "Drizzle":
+                                        ll_weathercard.setBackgroundResource(R.drawable.rainy_weather);
+                                        break;
+                                    case "Thunderstorm":
+                                        ll_weathercard.setBackgroundResource(R.drawable.thunder_weather);
+                                        break;
+                                    default:
+                                        ll_weathercard.setBackgroundResource(R.drawable.sunny_weather);
+                                }
+
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(context,error.toString(),Toast.LENGTH_LONG).show();
+                            }
+                        });
+                requestQueue.add(jsonObjectRequest);
+            }
+        });
+        String backendurl ="https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&cat=home";
         cardlist = new ArrayList<Card>();
 
         recyclerView = root.findViewById(R.id.card_list);
@@ -63,7 +113,7 @@ public class HomeFragment extends Fragment {
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                (Request.Method.GET, backendurl, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {

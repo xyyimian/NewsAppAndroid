@@ -4,4 +4,11 @@
     <string name="title_headlines">Headlines</string>
     <string name="title_trending">Trending</string>
     <string name="title_bookmark">Bookmark</string>
+    <string name="text_location_permission" >Allow NewsApp tp access this device\'s location</string>
+    <string name="title_location_permission" >NewsApp</string>
+    <string name="ok">OK</string>
+    <string name="cancel">cancel</string>
+    <string name="GPSAlertDialogTitle">GPSAlertDialogTitle</string>
+    <string name="GPSAlertDialogMessage">GPSAlertDialogMessageGPSAlertDialogMessage</string>
+    <string name="action_settings">action_settings</string>
 </resources>

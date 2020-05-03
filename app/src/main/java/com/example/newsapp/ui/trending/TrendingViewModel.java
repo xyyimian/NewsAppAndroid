@@ -16,4 +16,8 @@ public class TrendingViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
+
+    public void setText(String str){
+        mText.setValue(str);
+    }
 }
