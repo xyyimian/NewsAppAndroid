@@ -43,13 +43,13 @@ public class HomeFragment extends Fragment {
     TextView tv_weatherCity,tv_weatherTemp,tv_weatherSummary;
     LinearLayout ll_weathercard;
     ArrayList<Card> cardlist;
+    String weatherurl;
 
     private HomeViewModel homeViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
+        homeViewModel = ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         context = getActivity().getApplicationContext();
         requestQueue = Volley.newRequestQueue(context);
@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(@Nullable String s) {
                 tv_weatherCity.setText(s);
-                String weatherurl = "https://api.openweathermap.org/data/2.5/weather?q="+s+"&units=metric&appid=0d4483a90645a0ebcf9a8ea11ce529eb";
+                weatherurl = "https://api.openweathermap.org/data/2.5/weather?q="+s+"&units=metric&appid=0d4483a90645a0ebcf9a8ea11ce529eb";
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                         (Request.Method.GET, weatherurl, null, new Response.Listener<JSONObject>() {
 

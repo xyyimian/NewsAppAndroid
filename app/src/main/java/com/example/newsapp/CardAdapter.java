@@ -58,7 +58,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         holder.tv_cardTime.setText(cardlist.get(position).getTime());
         holder.tv_cardSection.setText(cardlist.get(position).getSection());
         if(cardlist.get(position).getImgurl().compareTo("")!=0){
-            Picasso.with(context).load(cardlist.get(position).getImgurl()).noPlaceholder().into(holder.iv_cardImage);
+         //   Picasso.with(context).load(cardlist.get(position).getImgurl()).noPlaceholder().into(holder.iv_cardImage);
+            Picasso.with(context).load(cardlist.get(position).getImgurl()).resize(2048, 1600).onlyScaleDown().into(holder.iv_cardImage);
         }
 
     }

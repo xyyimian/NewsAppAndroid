@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         //homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         if(checkLocationPermission()){
             gpsTracker= new GPSTracker(this);
-            //Toast.makeText(this,"long:"+gpsTracker.getLongitude()+"\nlat:"+gpsTracker.getLatitude()+"\ngetLocality:"+gpsTracker.getLocality(this),Toast.LENGTH_LONG).show();
+            Toast.makeText(this,gpsTracker.getState(this),Toast.LENGTH_LONG).show();
             homeViewModel.setText(gpsTracker.getLocality(this));
         }
         BottomNavigationView navView = findViewById(R.id.nav_view);

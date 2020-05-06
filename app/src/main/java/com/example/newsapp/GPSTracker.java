@@ -282,6 +282,24 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
     /**
+     * Try to get Locality
+     * @return null or locality
+     */
+    public String getState(Context context) {
+        List<Address> addresses = getGeocoderAddress(context);
+
+        if (addresses != null && addresses.size() > 0) {
+            Address address = addresses.get(0);
+            String state = address.getAdminArea();
+
+            return state;
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
      * Try to get Postal Code
      * @return null or postalCode
      */
