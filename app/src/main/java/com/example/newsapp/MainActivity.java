@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                         //Request location updates:
                         //locationManager.requestLocationUpdates(provider, 400, 1, this);
                         gpsTracker= new GPSTracker(this);
-                        homeViewModel.setText(gpsTracker.getLocality(this));
+                        homeViewModel.setText(gpsTracker.getLocality(this)+","+gpsTracker.getState(this));
                         //Toast.makeText(this,"long:"+gpsTracker.getLongitude()+"\nlat:"+gpsTracker.getLatitude()+"\ngetLocality:"+gpsTracker.getLocality(this),Toast.LENGTH_LONG).show();
                         //tv_test.setText(String.valueOf(gpsTracker.getLongitude())+" "+String.valueOf(gpsTracker.getLatitude()));
                     }
@@ -132,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
         //homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         if(checkLocationPermission()){
             gpsTracker= new GPSTracker(this);
-            Toast.makeText(this,gpsTracker.getState(this),Toast.LENGTH_LONG).show();
-            homeViewModel.setText(gpsTracker.getLocality(this));
+            //Toast.makeText(this,gpsTracker.getState(this),Toast.LENGTH_LONG).show();
+            homeViewModel.setText(gpsTracker.getLocality(this)+","+gpsTracker.getState(this));
         }
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
