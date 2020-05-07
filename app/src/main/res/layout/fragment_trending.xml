@@ -11,13 +11,27 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Enter Search Term:" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_vertical"
+        android:text="Enter Search Term:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/trend_query"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        app:backgroundTint="@color/colorPrimary"
+        android:text="CoronaVirus" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/line_chart"
+        android:layout_width="match_parent"
+        android:layout_height="473dp"
+        android:layout_marginTop="40dp" />
 </LinearLayout>
