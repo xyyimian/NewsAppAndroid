@@ -48,6 +48,10 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
 
+    public interface homebookmark{
+        String getBookmark();
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
@@ -127,7 +131,11 @@ public class HomeFragment extends Fragment {
                         JSONArray jsonArray = response.optJSONArray("results");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.optJSONObject(i);
-                            cardlist.add(new Card(jsonObject.optString("title"),
+                            cardlist.add(new Card(
+                                    jsonObject.optString("id"),
+                                    jsonObject.optString("url"),
+                                    jsonObject.optString("title"),
+                                    jsonObject.optString("description"),
                                     "5m ago",
                                     jsonObject.optString("section"),
                                     jsonObject.optString("image")));
