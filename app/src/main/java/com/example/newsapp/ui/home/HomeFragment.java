@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,9 @@ public class HomeFragment extends Fragment {
     LinearLayout ll_weathercard;
     ArrayList<Card> cardlist;
     String weatherurl;
+    //private ProgressBar spinner;
+    RelativeLayout spinner;
+
 
     private HomeViewModel homeViewModel;
 
@@ -53,6 +58,8 @@ public class HomeFragment extends Fragment {
         homeViewModel = ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         context = getActivity().getApplicationContext();
+        //spinner = (ProgressBar)root.findViewById(R.id.progressBar);
+        spinner = root.findViewById(R.id.spinner);
         requestQueue = Volley.newRequestQueue(context);
         tv_weatherCity = root.findViewById(R.id.tv_weatherCity);
         tv_weatherState = root.findViewById(R.id.tv_weatherState);
@@ -97,7 +104,6 @@ public class HomeFragment extends Fragment {
                                     default:
                                         ll_weathercard.setBackgroundResource(R.drawable.sunny_weather);
                                 }
-
                             }
                         }, new Response.ErrorListener() {
 
@@ -115,9 +121,10 @@ public class HomeFragment extends Fragment {
         recyclerView = root.findViewById(R.id.card_list);
         recyclerView.setHasFixedSize(true);
         //recyclerView.setNestedScrollingEnabled(false);
-
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
+        //spinner.setVisibility(View.VISIBLE);
+        spinner.setVisibility(RelativeLayout.VISIBLE);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, backendurl, null, new Response.Listener<JSONObject>() {
 
@@ -138,6 +145,8 @@ public class HomeFragment extends Fragment {
                         }
                         myAdapter = new CardAdapter(context,cardlist);
                         recyclerView.setAdapter(myAdapter);
+                        //spinner.setVisibility(View.GONE);
+                        spinner.setVisibility(RelativeLayout.GONE);
                     }
                 }, new Response.ErrorListener() {
 

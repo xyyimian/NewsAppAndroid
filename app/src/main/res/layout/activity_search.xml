@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
+    <include
+        android:id="@+id/searchspinner"
+        layout="@layout/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="730dp"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_card_list"
         android:layout_width="match_parent"

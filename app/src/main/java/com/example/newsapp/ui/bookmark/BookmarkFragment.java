@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -191,6 +192,7 @@ public class BookmarkFragment extends Fragment {
                     }
                     editor.putString("SavedNews", savedNewsJson.toString());
                     editor.apply();
+                    Toast.makeText(context,"\""+card.getTitle()+"\" was removed from bookmarks",Toast.LENGTH_LONG).show();
                 }
                 catch (JSONException e){
                     e.printStackTrace();

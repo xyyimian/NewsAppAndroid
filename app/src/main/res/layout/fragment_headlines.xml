@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".ui.headlines.HeadlinesFragment">
@@ -10,12 +10,22 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lv_hltags"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <include
+        android:id="@+id/headlinespinner"
+        layout="@layout/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hl_card_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="50dp" />
+        android:paddingBottom="50dp" >
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>
