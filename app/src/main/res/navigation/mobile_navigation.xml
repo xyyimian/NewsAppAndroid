@@ -8,24 +8,24 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.newsapp.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_headlines"
         android:name="com.example.newsapp.ui.headlines.HeadlinesFragment"
-        android:label="@string/title_headlines"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_headlines" />
 
     <fragment
         android:id="@+id/navigation_trending"
         android:name="com.example.newsapp.ui.trending.TrendingFragment"
-        android:label="@string/title_trending"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_trending" />
 
     <fragment
         android:id="@+id/navigation_bookmark"
         android:name="com.example.newsapp.ui.bookmark.BookmarkFragment"
-        android:label="@string/title_bookmark"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_bookmark" />
 </navigation>

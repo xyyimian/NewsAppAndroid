@@ -48,6 +48,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
 
+
     public interface homebookmark{
         String getBookmark();
     }

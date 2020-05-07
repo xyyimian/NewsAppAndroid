@@ -1,6 +1,7 @@
 package com.example.newsapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.newsapp.ui.headlines.TabAdapter;
 import com.example.newsapp.ui.home.HomeFragment;
 import com.squareup.picasso.Picasso;
 
@@ -69,13 +71,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         ImageView iv_cardBookmark;
         TextView tv_cardTitle,tv_cardTime,tv_cardSection;
 
-
-
-
-
+        Card card;
         private void SaveNews(){
-
-
             String title = tv_cardTitle.getText().toString();
             String time = tv_cardTime.getText().toString();
             String section = tv_cardSection.getText().toString();
@@ -120,13 +117,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             }
         }
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             tv_cardTitle = itemView.findViewById(R.id.tv_cardTitle);
             tv_cardTime = itemView.findViewById(R.id.tv_cardTime);
             tv_cardSection = itemView.findViewById(R.id.tv_cardSection);
             iv_cardImage = itemView.findViewById(R.id.iv_cardImage);
             iv_cardBookmark = itemView.findViewById(R.id.iv_cardBookmark);
+
+
 
             iv_cardBookmark.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -147,7 +146,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
                 }
             });
 
-//            itemView.setOnClickListener();
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context,com.example.newsapp.DetailActivity.class);
+                    intent.putExtra("id",((Card)v.getTag()).getId());
+                    intent.putExtra("section",((Card)v.getTag()).getSection());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
     @NonNull
@@ -163,6 +171,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         holder.tv_cardTitle.setText(cardlist.get(position).getTitle());
         holder.tv_cardTime.setText(cardlist.get(position).getTime());
         holder.tv_cardSection.setText(cardlist.get(position).getSection());
+        holder.card = cardlist.get(position);
+
         if(cardlist.get(position).getImgurl().compareTo("")!=0){
          //   Picasso.with(context).load(cardlist.get(position).getImgurl()).noPlaceholder().into(holder.iv_cardImage);
             Picasso.with(context).load(cardlist.get(position).getImgurl()).resize(2048, 1600).onlyScaleDown().into(holder.iv_cardImage);

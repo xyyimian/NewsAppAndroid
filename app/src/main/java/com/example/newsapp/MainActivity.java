@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.white)));
         //fragmentManager = getSupportFragmentManager();
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         //homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);

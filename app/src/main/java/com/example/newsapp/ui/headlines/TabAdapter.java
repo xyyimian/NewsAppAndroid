@@ -23,7 +23,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder>{
     ItemClicked mCallback;
 
     public interface ItemClicked{
-        void onItemClicked(int index);
+        void onTabItemClicked(int index);
     }
 
     public TabAdapter(Context context,ArrayList<Tab> tablist,ItemClicked callback){
@@ -41,7 +41,7 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder>{
                 @Override
                 public void onClick(View v) {
                     //mCallback.onItemClicked(tablist.indexOf(v.getTag()));
-                    mCallback.onItemClicked(tablist.indexOf((Tab)v.getTag()));
+                    mCallback.onTabItemClicked(tablist.indexOf((Tab)v.getTag()));
                 }
             });
         }

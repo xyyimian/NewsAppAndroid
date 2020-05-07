@@ -83,7 +83,7 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
     }
 
     @Override
-    public void onItemClicked(int index) {
+    public void onTabItemClicked(int index) {
 //        Toast.makeText(context,Integer.toString(index),Toast.LENGTH_LONG).show();
         for(int i=0;i<tablist.size();i++){
             tablist.get(i).setSelected(false);
@@ -91,25 +91,32 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
         }
         tablist.get(index).setSelected(true);
         myAdaptert.notifyItemChanged(index);
+        if(index>2) recyclerViewt.smoothScrollToPosition(5);
+        else recyclerViewt.smoothScrollToPosition(0);
         refreshCardlist(index);
     }
+
 
     private void refreshCardlist(int index) {
         String backendurl ="https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&cat="+tablist.get(index).getSection();
         cardlist = new ArrayList<Card>();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, backendurl, null, new Response.Listener<JSONObject>() {
-
                     @Override
                     public void onResponse(JSONObject response) {
                         //text_home.setText("Response: " + response.toString());
                         JSONArray jsonArray = response.optJSONArray("results");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.optJSONObject(i);
-                            cardlist.add(new Card(jsonObject.optString("title"),
+                            cardlist.add(new Card(
+                                    jsonObject.optString("id"),
+                                    jsonObject.optString("url"),
+                                    jsonObject.optString("title"),
+                                    jsonObject.optString("description"),
                                     "5m ago",
                                     jsonObject.optString("section"),
-                                    jsonObject.optString("image")));
+                                    jsonObject.optString("image"))
+                            );
                         }
                         myAdapterc = new CardAdapter(context,cardlist);
                         recyclerViewc.setAdapter(myAdapterc);
@@ -125,4 +132,5 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
         requestQueue.add(jsonObjectRequest);
 
     }
+
 }
