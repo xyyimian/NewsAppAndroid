@@ -139,6 +139,8 @@ public class TrendingFragment extends Fragment {
                         LineDataSet lds = new LineDataSet(dataList, "Trending chart for "+query);
                         lds.setAxisDependency(YAxis.AxisDependency.LEFT);
                         lds.setColors(Color.BLUE);
+                        lds.setValueTextColor(Color.BLUE);
+
                         callback.onSuccessResponse(lds);
 
                     }
