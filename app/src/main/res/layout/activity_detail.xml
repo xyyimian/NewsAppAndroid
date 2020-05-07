@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context=".DetailActivity">
 
+    <include
+        android:id="@+id/detailspinner"
+        layout="@layout/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="730dp"
+        android:visibility="gone" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
     ArrayList<Card> cardlist;
     RequestQueue requestQueue;
     Context context;
+    RelativeLayout spinner;
 
     private HeadlinesViewModel headlinesViewModel;
 
@@ -50,6 +52,7 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
         View root = inflater.inflate(R.layout.fragment_headlines, container, false);
         context = getActivity().getApplicationContext();
         requestQueue = Volley.newRequestQueue(context);
+        spinner = root.findViewById(R.id.headlinespinner);
 //        final TextView textView = root.findViewById(R.id.text_headlines);
 //        headlinesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
 //            @Override
@@ -100,6 +103,7 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
     private void refreshCardlist(int index) {
         String backendurl ="https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&cat="+tablist.get(index).getSection();
         cardlist = new ArrayList<Card>();
+        spinner.setVisibility(RelativeLayout.VISIBLE);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, backendurl, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -121,6 +125,7 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
                         myAdapterc = new CardAdapter(context,cardlist);
                         recyclerViewc.setAdapter(myAdapterc);
                         //myAdapterc.notifyItemRangeChanged(0,cardlist.size());
+                        spinner.setVisibility(RelativeLayout.GONE);
                     }
                 }, new Response.ErrorListener() {
 

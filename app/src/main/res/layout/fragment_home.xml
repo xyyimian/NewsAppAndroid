@@ -7,6 +7,9 @@
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment">
 
+
+
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_weather"
         android:layout_width="match_parent"
@@ -93,11 +96,20 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <include
+        android:id="@+id/spinner"
+        layout="@layout/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="620dp"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/card_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="50dp" />
+        android:paddingBottom="50dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 
 </LinearLayout>

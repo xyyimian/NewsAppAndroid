@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class SearchActivity extends AppCompatActivity {
     String url;
     String keyword;
     Context context;
+    RelativeLayout spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -49,11 +51,12 @@ public class SearchActivity extends AppCompatActivity {
         //tv_search.setText(keyword);
         url = "https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&query=" + keyword;
         cardlist = new ArrayList<Card>();
-
+        spinner = findViewById(R.id.searchspinner);
         recyclerView = findViewById(R.id.search_card_list);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        spinner.setVisibility(RelativeLayout.VISIBLE);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -74,6 +77,7 @@ public class SearchActivity extends AppCompatActivity {
                         }
                         myAdapter = new CardAdapter(context,cardlist);
                         recyclerView.setAdapter(myAdapter);
+                        spinner.setVisibility(RelativeLayout.GONE);
                     }
                 }, new Response.ErrorListener() {
 

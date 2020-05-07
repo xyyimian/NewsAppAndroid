@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class DetailActivity extends AppCompatActivity {
     RequestQueue requestQueue;
     Context context;
     String id,section,url;
+    RelativeLayout spinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -44,6 +46,7 @@ public class DetailActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.white)));
         context = this;
+        spinner = findViewById(R.id.detailspinner);
         tv_detailsection = findViewById(R.id.tv_detailsection);
         tv_detailtime = findViewById(R.id.tv_detailtime);
         tv_detailtitle = findViewById(R.id.tv_detailtitle);
@@ -55,6 +58,7 @@ public class DetailActivity extends AppCompatActivity {
         section = getIntent().getStringExtra("section");
 //        tv_detail.setText(id);
         url = "https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&nid="+id;
+        spinner.setVisibility(RelativeLayout.VISIBLE);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -79,6 +83,7 @@ public class DetailActivity extends AppCompatActivity {
                         if(detailobj.optString("image").compareTo("")!=0){
                             Picasso.with(context).load(detailobj.optString("image")).resize(4096, 3200).onlyScaleDown().into(iv_detailimage);
                         }
+                        spinner.setVisibility(RelativeLayout.GONE);
                     }
                 }, new Response.ErrorListener() {
 
