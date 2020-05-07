@@ -22,7 +22,7 @@
             android:id="@+id/ll_weathercard"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@drawable/sunny_weather"
+            android:background="#FFFFFF"
             android:orientation="horizontal">
 
             <LinearLayout
