@@ -68,24 +68,20 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         ImageView iv_cardImage;
         ImageView iv_cardBookmark;
         TextView tv_cardTitle,tv_cardTime,tv_cardSection;
-
+        Card card;
 
 
 
 
         private void SaveNews(){
 
-
-            String title = tv_cardTitle.getText().toString();
-            String time = tv_cardTime.getText().toString();
-            String section = tv_cardSection.getText().toString();
-
             JSONObject news = new JSONObject();
             try {
-                news.put("title", title);
-                news.put("time", time);
-                news.put("section", section);
-
+                news.put("title", card.getTitle());
+                news.put("time", card.getTime());
+                news.put("section", card.getSection());
+                news.put("imgUrl", card.getImgurl());
+                news.put("id", card.getId());
                 savedNewsJson.put(news.toString());
 
                 editor.putString("SavedNews", savedNewsJson.toString());
@@ -100,14 +96,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         private void UnSaveNews(){
 
-            String title = tv_cardTitle.getText().toString();
-            String time = tv_cardTime.getText().toString();
-            String section = tv_cardSection.getText().toString();
+            String id = card.getId();
             try {
 
                 for (int i = 0; i < savedNewsJson.length(); ++i) {
                     JSONObject jsontemp = new JSONObject(savedNewsJson.getString(i));
-                    if(jsontemp.getString("title").equals(title)){
+                    if(jsontemp.optString("id").equals(id)){
                         savedNewsJson.remove(i);
                         break;
                     }
@@ -163,6 +157,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         holder.tv_cardTitle.setText(cardlist.get(position).getTitle());
         holder.tv_cardTime.setText(cardlist.get(position).getTime());
         holder.tv_cardSection.setText(cardlist.get(position).getSection());
+        holder.card = cardlist.get(position);
         if(cardlist.get(position).getImgurl().compareTo("")!=0){
          //   Picasso.with(context).load(cardlist.get(position).getImgurl()).noPlaceholder().into(holder.iv_cardImage);
             Picasso.with(context).load(cardlist.get(position).getImgurl()).resize(2048, 1600).onlyScaleDown().into(holder.iv_cardImage);
@@ -173,7 +168,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         try {
             for (int i = 0; i < savedNewsJson.length(); ++i) {
                 JSONObject jsontemp = new JSONObject(savedNewsJson.getString(i));
-                if(jsontemp.getString("title").equals(title)){
+                if(jsontemp.optString("title").equals(title)){
                     found = true;
                     break;
                 }
