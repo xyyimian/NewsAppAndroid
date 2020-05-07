@@ -2,6 +2,7 @@ package com.example.newsapp.ui.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class HomeFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager;
     RequestQueue requestQueue;
     Context context;
-    TextView tv_weatherCity,tv_weatherTemp,tv_weatherSummary;
+    TextView tv_weatherCity,tv_weatherState,tv_weatherTemp,tv_weatherSummary;
     LinearLayout ll_weathercard;
     ArrayList<Card> cardlist;
     String weatherurl;
@@ -54,14 +55,18 @@ public class HomeFragment extends Fragment {
         context = getActivity().getApplicationContext();
         requestQueue = Volley.newRequestQueue(context);
         tv_weatherCity = root.findViewById(R.id.tv_weatherCity);
+        tv_weatherState = root.findViewById(R.id.tv_weatherState);
         tv_weatherTemp = root.findViewById(R.id.tv_weatherTemp);
         tv_weatherSummary = root.findViewById(R.id.tv_weatherSummary);
         ll_weathercard = root.findViewById(R.id.ll_weathercard);
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                tv_weatherCity.setText(s);
-                weatherurl = "https://api.openweathermap.org/data/2.5/weather?q="+s+"&units=metric&appid=0d4483a90645a0ebcf9a8ea11ce529eb";
+                String[] sitystate = s.split(",");
+                if(sitystate.length<2) return;
+                tv_weatherCity.setText(sitystate[0]);
+                tv_weatherState.setText(sitystate[1]);
+                weatherurl = "https://api.openweathermap.org/data/2.5/weather?q="+sitystate[0]+"&units=metric&appid=0d4483a90645a0ebcf9a8ea11ce529eb";
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                         (Request.Method.GET, weatherurl, null, new Response.Listener<JSONObject>() {
 
@@ -109,6 +114,7 @@ public class HomeFragment extends Fragment {
 
         recyclerView = root.findViewById(R.id.card_list);
         recyclerView.setHasFixedSize(true);
+        //recyclerView.setNestedScrollingEnabled(false);
 
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
