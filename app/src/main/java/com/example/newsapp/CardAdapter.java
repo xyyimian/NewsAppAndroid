@@ -85,6 +85,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
                 editor.putString("SavedNews", savedNewsJson.toString());
                 editor.apply();
+                Toast.makeText(context,"\""+card.getTitle()+"\" was added to bookmarks",Toast.LENGTH_LONG).show();
             }
             catch (JSONException e){
                 e.printStackTrace();
@@ -107,6 +108,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
                 }
                 editor.putString("SavedNews", savedNewsJson.toString());
                 editor.apply();
+                Toast.makeText(context,"\""+card.getTitle()+"\" was removed from bookmarks",Toast.LENGTH_LONG).show();
             }
             catch (JSONException e){
                 e.printStackTrace();
