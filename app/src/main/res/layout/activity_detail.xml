@@ -17,7 +17,7 @@
             android:layout_height="2000dp"
             android:layout_margin="7dp"
             app:cardBackgroundColor="#F0F0F0"
-            app:cardCornerRadius="5dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="5dp"
             app:cardUseCompatPadding="false">
 
@@ -34,17 +34,6 @@
                     android:scaleType="fitXY"
                     app:srcCompat="@drawable/default_guardian" />
 
-                <TextView
-                    android:id="@+id/tv_detailtitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="TextView"
-                    android:textColor="#000000"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -56,6 +45,7 @@
                         android:id="@+id/tv_detailsection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:text="TextView"
                         android:textSize="18sp" />
@@ -64,6 +54,7 @@
                         android:id="@+id/tv_detailtime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:gravity="end"
                         android:text="TextView"
@@ -71,13 +62,26 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tv_detailtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp"
+                    android:text="TextView"
+                    android:textColor="#000000"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:id="@+id/tv_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_marginBottom="10dp"
-                    android:text="TextView"
                     android:ellipsize="end"
                     android:maxLines="30"
+                    android:text="TextView"
                     android:textSize="22sp" />
 
                 <TextView
@@ -94,4 +98,5 @@
 
         </androidx.cardview.widget.CardView>
     </ScrollView>
+
 </LinearLayout>

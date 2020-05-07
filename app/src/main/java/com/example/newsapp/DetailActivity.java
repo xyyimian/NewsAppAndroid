@@ -25,6 +25,10 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class DetailActivity extends AppCompatActivity {
     TextView tv_detail,tv_detailsection,tv_detailtime,tv_detailtitle,tv_detailviewfull;
     ImageView iv_detailimage;
@@ -62,7 +66,12 @@ public class DetailActivity extends AppCompatActivity {
                         setTitle(detailobj.optString("title"));
                         tv_detailtitle.setText(detailobj.optString("title"));
                         tv_detailsection.setText(section+" news");
-                        tv_detailtime.setText(detailobj.optString("date"));
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            LocalDateTime localTimeObj = LocalDateTime.parse(detailobj.optString("date").substring(0,19));
+                            DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd MMM uuuu");
+                            tv_detailtime.setText(dTF.format(localTimeObj));
+                        }
+                        else tv_detailtime.setText(detailobj.optString("date"));
                         tv_detail.setText(detailobj.optString("description"));
                         String viewfull = " <a href="+detailobj.optString("url") +"><u>View Full Article</u></a>";
                         tv_detailviewfull.setMovementMethod(LinkMovementMethod.getInstance());

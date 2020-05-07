@@ -4,9 +4,13 @@ import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +41,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -49,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private HomeViewModel homeViewModel;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     GPSTracker gpsTracker;
+    Context context;
+    SearchView searchView;
     //FragmentManager fragmentManager;
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
@@ -128,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.white)));
         //fragmentManager = getSupportFragmentManager();
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
@@ -148,5 +156,38 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main,menu);
+        //searchView = findViewById(R.id.action_search);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(context,com.example.newsapp.SearchActivity.class);
+                intent.putExtra("keyword",query);
+                context.startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch(item.getItemId()){
+//            case R.id.action_search:
+//                Intent intent = new Intent(context,com.example.newsapp.SearchActivity.class);
+//                context.startActivity(intent);
+//                break;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
 }
