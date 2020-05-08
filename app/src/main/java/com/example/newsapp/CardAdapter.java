@@ -1,5 +1,6 @@
 package com.example.newsapp;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +33,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -38,8 +44,10 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
+    private static final long SECONDS_PER_HOUR = 3600;
+    private static final long SECONDS_PER_MINUTE = 60;
     private ArrayList<Card> cardlist;
-    Context context;
+    final Context context;
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -126,9 +134,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             tv_cardSection = itemView.findViewById(R.id.tv_cardSection);
             iv_cardImage = itemView.findViewById(R.id.iv_cardImage);
             iv_cardBookmark = itemView.findViewById(R.id.iv_cardBookmark);
-
-
-
             iv_cardBookmark.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
@@ -168,6 +173,27 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
                     context.startActivity(intent);
                 }
             });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener(){
+
+                @Override
+                public boolean onLongClick(View v) {
+                    // custom dialog
+                    final Dialog dialog = new Dialog(context);
+                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                    dialog.setContentView(R.layout.dialog);
+                    // set the custom dialog components - text, image and button
+                    TextView tv_dialogTitle = (TextView) dialog.findViewById(R.id.tv_dialogTitle);
+                    tv_dialogTitle.setText(((Card)v.getTag()).getTitle());
+                    ImageView iv_dialogimage = (ImageView) dialog.findViewById(R.id.iv_dialogimage);
+                    if(((Card)v.getTag()).getImgurl().compareTo("")!=0){
+                        Picasso.with(context).load(((Card)v.getTag()).getImgurl()).resize(2048, 1600).onlyScaleDown().into(iv_dialogimage);
+                    }
+                    dialog.setCanceledOnTouchOutside(true);
+                    dialog.show();
+                    return true;
+                }
+            });
         }
     }
     @NonNull
@@ -181,7 +207,23 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull CardAdapter.ViewHolder holder, int position) {
         holder.itemView.setTag(cardlist.get(position));
         holder.tv_cardTitle.setText(cardlist.get(position).getTitle());
-        holder.tv_cardTime.setText(cardlist.get(position).getTime());
+        //
+        String cardTime="";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            //LocalDateTime UTCpublishTime = LocalDateTime.parse(cardlist.get(position).getTime());
+            ZonedDateTime UTCpublishTime = ZonedDateTime.parse(cardlist.get(position).getTime()+"+00:00[Europe/London]");
+            LocalDateTime publishTime = UTCpublishTime.toLocalDateTime();
+            LocalDateTime now = LocalDateTime.now();
+            long time[] = getTime(publishTime, now);
+            if(time[0]!=0){
+                cardTime = time[0]+"h ago";
+            }else if(time[1]!=0){
+                cardTime = time[1]+"m ago";
+            }else{
+                cardTime = time[2]+"s ago";
+            }
+        }
+        holder.tv_cardTime.setText(cardTime);
         holder.tv_cardSection.setText(cardlist.get(position).getSection());
         holder.card = cardlist.get(position);
 
@@ -221,5 +263,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return cardlist.size();
+    }
+
+    private static long[] getTime(LocalDateTime dob, LocalDateTime now) {
+        LocalDateTime today = LocalDateTime.of(now.getYear(),
+                now.getMonthValue(), now.getDayOfMonth(), dob.getHour(), dob.getMinute(), dob.getSecond());
+        Duration duration = Duration.between(today, now);
+
+        long seconds = duration.getSeconds();
+
+        long hours = seconds / SECONDS_PER_HOUR;
+        long minutes = ((seconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
+        long secs = (seconds % SECONDS_PER_MINUTE);
+
+        return new long[]{hours, minutes, secs};
     }
 }

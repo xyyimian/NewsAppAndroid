@@ -35,6 +35,8 @@ import com.example.newsapp.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
@@ -139,7 +141,7 @@ public class HomeFragment extends Fragment {
                                     jsonObject.optString("url"),
                                     jsonObject.optString("title"),
                                     jsonObject.optString("description"),
-                                    "5m ago",
+                                    jsonObject.optString("date").substring(0,19),
                                     jsonObject.optString("section"),
                                     jsonObject.optString("image")));
                         }

@@ -74,7 +74,7 @@ public class SearchActivity extends AppCompatActivity {
                                     jsonObject.optString("url"),
                                     jsonObject.optString("title"),
                                     jsonObject.optString("description"),
-                                    "5m ago",
+                                    jsonObject.optString("date").substring(0,19),
                                     jsonObject.optString("section"),
                                     jsonObject.optString("image")));
                         }
