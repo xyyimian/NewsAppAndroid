@@ -139,9 +139,7 @@ public class BookmarkFragment extends Fragment {
             holder.itemView.setTag(cardlist.get(position));
             String bmcardTime = "";
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                ZonedDateTime UTCpublishTime = ZonedDateTime.parse(cardlist.get(position).getTime()+"+00:00[Europe/London]");
-                LocalDateTime publishTime = UTCpublishTime.toLocalDateTime();
-                //LocalDateTime publishTime = LocalDateTime.parse(cardlist.get(position).getTime());
+                LocalDateTime publishTime = LocalDateTime.parse(cardlist.get(position).getTime());
                 DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd MMM");
                 bmcardTime = dTF.format(publishTime);
             }

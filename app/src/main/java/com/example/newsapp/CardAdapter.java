@@ -210,9 +210,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         //
         String cardTime="";
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            //LocalDateTime UTCpublishTime = LocalDateTime.parse(cardlist.get(position).getTime());
-            ZonedDateTime UTCpublishTime = ZonedDateTime.parse(cardlist.get(position).getTime()+"+00:00[Europe/London]");
-            LocalDateTime publishTime = UTCpublishTime.toLocalDateTime();
+            LocalDateTime publishTime = LocalDateTime.parse(cardlist.get(position).getTime());
             LocalDateTime now = LocalDateTime.now();
             long time[] = getTime(publishTime, now);
             if(time[0]!=0){
@@ -266,9 +264,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     }
 
     private static long[] getTime(LocalDateTime dob, LocalDateTime now) {
-        LocalDateTime today = LocalDateTime.of(now.getYear(),
-                now.getMonthValue(), now.getDayOfMonth(), dob.getHour(), dob.getMinute(), dob.getSecond());
-        Duration duration = Duration.between(today, now);
+//        LocalDateTime today = LocalDateTime.of(now.getYear(),
+//                now.getMonthValue(), now.getDayOfMonth(), dob.getHour(), dob.getMinute(), dob.getSecond());
+        Duration duration = Duration.between(dob, now);
 
         long seconds = duration.getSeconds();
 
