@@ -78,7 +78,7 @@ public class SearchActivity extends AppCompatActivity {
                                     jsonObject.optString("section"),
                                     jsonObject.optString("image")));
                         }
-                        myAdapter = new CardAdapter(context,cardlist);
+                        myAdapter = new CardAdapter(context, cardlist);
                         recyclerView.setAdapter(myAdapter);
                         spinner.setVisibility(RelativeLayout.GONE);
                     }

@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -156,7 +157,8 @@ public class DetailActivity extends AppCompatActivity {
 
                 break;
             case R.id.detail_twitter:
-                System.out.println("twitter clicked");
+                String title = "title";
+                String url = "https://twitter.com/intent/tweet?url="+jsNews.optString("id")+"&hashtags=#NEWSAPP";
                 break;
         }
         return super.onOptionsItemSelected(item);

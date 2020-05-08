@@ -1,5 +1,6 @@
 package com.example.newsapp;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -49,13 +50,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private static final long SECONDS_PER_MINUTE = 60;
     private ArrayList<Card> cardlist;
     final Context context;
+    private Activity mactivity;
 
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     String savedNews;
     JSONArray savedNewsJson;
 
-    public CardAdapter(Context context,ArrayList<Card> cardlist){
+    public CardAdapter(Context context, ArrayList<Card> cardlist){
         this.cardlist = cardlist;
         this.context = context;
         this.pref = context.getSharedPreferences("MyPref", 0);
@@ -186,13 +188,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
                     dialog.setTitle("title");
                     // set the custom dialog components - text, image and button
                     TextView tv_dialogTitle = (TextView) dialog.findViewById(R.id.tv_dialogTitle);
-                    tv_dialogTitle.setText(((Card)v.getTag()).getTitle());
+                    tv_dialogTitle.setText(card.getTitle());
                     ImageView iv_dialogimage = (ImageView) dialog.findViewById(R.id.iv_dialogimage);
                     if(((Card)v.getTag()).getImgurl().compareTo("")!=0){
-                        Picasso.with(context).load(((Card)v.getTag()).getImgurl()).resize(2048, 1600).onlyScaleDown().into(iv_dialogimage);
+                        Picasso.with(context).load(card.getImgurl()).resize(2048, 1600).onlyScaleDown().into(iv_dialogimage);
                     }
                     dialog.setCanceledOnTouchOutside(true);
-                    dialog.show();
+//                    if(!mactivity.isFinishing())
+//                        dialog.show();
                     return true;
                 }
             });
