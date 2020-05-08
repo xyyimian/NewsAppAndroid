@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -51,6 +52,7 @@ public class HomeFragment extends Fragment {
     String weatherurl;
     //private ProgressBar spinner;
     RelativeLayout spinner;
+    SwipeRefreshLayout swiperefresh_home;
 
 
     private HomeViewModel homeViewModel;
@@ -68,6 +70,7 @@ public class HomeFragment extends Fragment {
         tv_weatherTemp = root.findViewById(R.id.tv_weatherTemp);
         tv_weatherSummary = root.findViewById(R.id.tv_weatherSummary);
         ll_weathercard = root.findViewById(R.id.ll_weathercard);
+        swiperefresh_home = root.findViewById(R.id.swiperefresh_home);
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -117,7 +120,7 @@ public class HomeFragment extends Fragment {
                 requestQueue.add(jsonObjectRequest);
             }
         });
-        String backendurl ="https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&cat=home";
+        final String backendurl ="https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&cat=home";
         cardlist = new ArrayList<Card>();
 
         recyclerView = root.findViewById(R.id.card_list);
@@ -159,6 +162,44 @@ public class HomeFragment extends Fragment {
                 });
         requestQueue.add(jsonObjectRequest);
 
+        swiperefresh_home.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+//                spinner.setVisibility(RelativeLayout.VISIBLE);
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.GET, backendurl, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                //text_home.setText("Response: " + response.toString());
+                                JSONArray jsonArray = response.optJSONArray("results");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.optJSONObject(i);
+                                    cardlist.add(new Card(
+                                            jsonObject.optString("id"),
+                                            jsonObject.optString("url"),
+                                            jsonObject.optString("title"),
+                                            jsonObject.optString("description"),
+                                            jsonObject.optString("date").substring(0,19),
+                                            jsonObject.optString("section"),
+                                            jsonObject.optString("image")));
+                                }
+                                myAdapter = new CardAdapter(context,cardlist);
+                                recyclerView.setAdapter(myAdapter);
+                                //spinner.setVisibility(View.GONE);
+                                swiperefresh_home.setRefreshing(false);
+//                                spinner.setVisibility(RelativeLayout.GONE);
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(context,error.toString(),Toast.LENGTH_LONG).show();
+                            }
+                        });
+                requestQueue.add(jsonObjectRequest);
+            }
+        });
 
         return root;
     }

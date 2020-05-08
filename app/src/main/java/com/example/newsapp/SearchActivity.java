@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -38,6 +39,7 @@ public class SearchActivity extends AppCompatActivity {
     String keyword;
     Context context;
     RelativeLayout spinner;
+    SwipeRefreshLayout swiperefresh_search;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -56,6 +58,7 @@ public class SearchActivity extends AppCompatActivity {
         cardlist = new ArrayList<Card>();
         spinner = findViewById(R.id.searchspinner);
         recyclerView = findViewById(R.id.search_card_list);
+        swiperefresh_search = findViewById(R.id.swiperefresh_search);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -91,6 +94,43 @@ public class SearchActivity extends AppCompatActivity {
                 });
         requestQueue.add(jsonObjectRequest);
 
+        swiperefresh_search.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                //text_home.setText("Response: " + response.toString());
+                                JSONArray jsonArray = response.optJSONArray("results");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.optJSONObject(i);
+                                    cardlist.add(new Card(
+                                            jsonObject.optString("id"),
+                                            jsonObject.optString("url"),
+                                            jsonObject.optString("title"),
+                                            jsonObject.optString("description"),
+                                            jsonObject.optString("date").substring(0,19),
+                                            jsonObject.optString("section"),
+                                            jsonObject.optString("image")));
+                                }
+                                myAdapter = new CardAdapter(context,cardlist);
+                                recyclerView.setAdapter(myAdapter);
+                                swiperefresh_search.setRefreshing(false);
+//                            spinner.setVisibility(RelativeLayout.GONE);
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(context,error.toString(),Toast.LENGTH_LONG).show();
+                            }
+                        });
+                requestQueue.add(jsonObjectRequest);
+
+            }
+        });
     }
 
 //    @Override
