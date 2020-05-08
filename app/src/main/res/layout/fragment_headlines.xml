@@ -21,6 +21,12 @@
         android:layout_height="650dp"
         android:visibility="gone" />
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefresh_headline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hl_card_list"
         android:layout_width="match_parent"
@@ -28,4 +34,5 @@
         android:paddingBottom="50dp" >
     </androidx.recyclerview.widget.RecyclerView>
 
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -42,6 +43,7 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
     RequestQueue requestQueue;
     Context context;
     RelativeLayout spinner;
+    SwipeRefreshLayout swiperefresh_headline;
 
     private HeadlinesViewModel headlinesViewModel;
 
@@ -53,6 +55,7 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
         context = getActivity().getApplicationContext();
         requestQueue = Volley.newRequestQueue(context);
         spinner = root.findViewById(R.id.headlinespinner);
+        swiperefresh_headline = root.findViewById(R.id.swiperefresh_headline);
 //        final TextView textView = root.findViewById(R.id.text_headlines);
 //        headlinesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
 //            @Override
@@ -81,7 +84,18 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
         recyclerViewc.setLayoutManager(layoutManagerc);
         //cardlist = new ArrayList<Card>();
 
-        refreshCardlist(0);
+        refreshCardlist(0,true);
+        swiperefresh_headline.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                int id=0;
+                for(int i=0;i<tablist.size();i++){
+                    if(tablist.get(i).isSelected()) id=i;
+                }
+                refreshCardlist(id,false);
+
+            }
+        });
         return root;
     }
 
@@ -96,14 +110,14 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
         myAdaptert.notifyItemChanged(index);
         if(index>2) recyclerViewt.smoothScrollToPosition(5);
         else recyclerViewt.smoothScrollToPosition(0);
-        refreshCardlist(index);
+        refreshCardlist(index,true);
     }
 
 
-    private void refreshCardlist(int index) {
+    private void refreshCardlist(int index,boolean fetching) {
         String backendurl ="https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&cat="+tablist.get(index).getSection();
         cardlist = new ArrayList<Card>();
-        spinner.setVisibility(RelativeLayout.VISIBLE);
+        if(fetching) spinner.setVisibility(RelativeLayout.VISIBLE);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, backendurl, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -126,6 +140,7 @@ public class HeadlinesFragment extends Fragment implements TabAdapter.ItemClicke
                         recyclerViewc.setAdapter(myAdapterc);
                         //myAdapterc.notifyItemRangeChanged(0,cardlist.size());
                         spinner.setVisibility(RelativeLayout.GONE);
+                        swiperefresh_headline.setRefreshing(false);
                     }
                 }, new Response.ErrorListener() {
 
