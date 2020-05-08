@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -180,8 +181,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
                 public boolean onLongClick(View v) {
                     // custom dialog
                     final Dialog dialog = new Dialog(context);
-                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+//                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
                     dialog.setContentView(R.layout.dialog);
+                    dialog.setTitle("title");
                     // set the custom dialog components - text, image and button
                     TextView tv_dialogTitle = (TextView) dialog.findViewById(R.id.tv_dialogTitle);
                     tv_dialogTitle.setText(((Card)v.getTag()).getTitle());
@@ -212,7 +214,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             LocalDateTime publishTime = LocalDateTime.parse(cardlist.get(position).getTime());
             LocalDateTime now = LocalDateTime.now();
-            long time[] = getTime(publishTime, now);
+            ZoneId zoneId = ZoneId.of( "Europe/London" );        //Zone information
+            ZonedDateTime zdtAtUTC = now.atZone( zoneId );
+            long time[] = getTime(publishTime, zdtAtUTC);
             if(time[0]!=0){
                 cardTime = time[0]+"h ago";
             }else if(time[1]!=0){
@@ -263,7 +267,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         return cardlist.size();
     }
 
-    private static long[] getTime(LocalDateTime dob, LocalDateTime now) {
+    private static long[] getTime(LocalDateTime dob, ZonedDateTime now) {
 //        LocalDateTime today = LocalDateTime.of(now.getYear(),
 //                now.getMonthValue(), now.getDayOfMonth(), dob.getHour(), dob.getMinute(), dob.getSecond());
         Duration duration = Duration.between(dob, now);
