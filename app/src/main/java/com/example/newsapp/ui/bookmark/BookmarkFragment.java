@@ -1,6 +1,7 @@
 package com.example.newsapp.ui.bookmark;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +33,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class BookmarkFragment extends Fragment {
@@ -133,7 +137,15 @@ public class BookmarkFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull BmCardAdapter.ViewHolder holder, int position) {
             holder.itemView.setTag(cardlist.get(position));
-            holder.tv_date.setText(cardlist.get(position).getTime()+" | " +cardlist.get(position).getSection());
+            String bmcardTime = "";
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                ZonedDateTime UTCpublishTime = ZonedDateTime.parse(cardlist.get(position).getTime()+"+00:00[Europe/London]");
+                LocalDateTime publishTime = UTCpublishTime.toLocalDateTime();
+                //LocalDateTime publishTime = LocalDateTime.parse(cardlist.get(position).getTime());
+                DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd MMM");
+                bmcardTime = dTF.format(publishTime);
+            }
+            holder.tv_date.setText(bmcardTime+" | " +cardlist.get(position).getSection());
             holder.tv_title.setText(cardlist.get(position).getTitle());
             holder.card = cardlist.get(position);
             if(!cardlist.get(position).getImgurl().equals("")){
@@ -170,6 +182,17 @@ public class BookmarkFragment extends Fragment {
                         if(cardlist.size() == 0){
                             msgView.setVisibility(View.VISIBLE);
                         }
+                    }
+                });
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context,com.example.newsapp.DetailActivity.class);
+                        intent.putExtra("id",((Card)v.getTag()).getId());
+                        intent.putExtra("section",((Card)v.getTag()).getSection());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
                     }
                 });
             }
