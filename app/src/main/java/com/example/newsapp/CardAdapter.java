@@ -132,6 +132,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
+
+
             tv_cardTitle = itemView.findViewById(R.id.tv_cardTitle);
             tv_cardTime = itemView.findViewById(R.id.tv_cardTime);
             tv_cardSection = itemView.findViewById(R.id.tv_cardSection);
@@ -160,7 +162,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context,com.example.newsapp.DetailActivity.class);
-
+                    JSONObject news = card2json(card);
+                    strNews = news.toString();
                     intent.putExtra("news", strNews);
                     boolean isSaved;
                     if(iv_cardBookmark.getTag().toString().equals("0")){
