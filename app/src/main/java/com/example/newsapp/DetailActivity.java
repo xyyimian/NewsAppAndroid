@@ -3,13 +3,17 @@ package com.example.newsapp;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDateTime;
@@ -35,12 +40,22 @@ public class DetailActivity extends AppCompatActivity {
     ImageView iv_detailimage;
     RequestQueue requestQueue;
     Context context;
-    String id,section,url;
+    JSONObject jsNews;
+    boolean isSaved;
     RelativeLayout spinner;
+
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    String savedNews;
+    JSONArray savedNewsJson;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_detail);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -54,10 +69,30 @@ public class DetailActivity extends AppCompatActivity {
         tv_detail = findViewById(R.id.tv_details);
         tv_detailviewfull = findViewById(R.id.tv_detailviewfull);
         requestQueue = Volley.newRequestQueue(this);
-        id = getIntent().getStringExtra("id");
-        section = getIntent().getStringExtra("section");
+
+
+        pref = context.getSharedPreferences("MyPref", 0);
+        editor = pref.edit();
+        savedNews = pref.getString("SavedNews", null);
+
+        try {
+            if(savedNews != null){
+                savedNewsJson = new JSONArray(savedNews);
+            }
+            else{
+                savedNewsJson = new JSONArray();
+            }
+            String temp = getIntent().getStringExtra("news");
+            jsNews = new JSONObject(getIntent().getStringExtra("news"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String id = jsNews.optString("id");
+        final String section = jsNews.optString("section");
+        isSaved= getIntent().getBooleanExtra("saved", false);
 //        tv_detail.setText(id);
-        url = "https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&nid="+id;
+
+        String url = "https://xyyimian-cs571-hw8.wl.r.appspot.com/api?type=guardian&nid="+id;
         spinner.setVisibility(RelativeLayout.VISIBLE);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -93,5 +128,64 @@ public class DetailActivity extends AppCompatActivity {
                     }
                 });
         requestQueue.add(jsonObjectRequest);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.detail_bar, menu);
+        if(isSaved)
+            menu.findItem(R.id.detail_bookmark).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_bookmark_saved));
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.detail_bookmark:
+                if(isSaved){
+                    item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_bookmark_border_black_24dp));
+                    UnSaveNews();
+                }
+                else{
+                    item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_bookmark_saved));
+                    SaveNews();
+                }
+
+                break;
+            case R.id.detail_twitter:
+                System.out.println("twitter clicked");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void SaveNews(){
+            savedNewsJson.put(jsNews);
+            editor.putString("SavedNews", savedNewsJson.toString());
+            editor.apply();
+            Toast.makeText(context,"\""+jsNews.optString("title")+"\" was added to bookmarks",Toast.LENGTH_LONG).show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void UnSaveNews(){
+        String id = jsNews.optString("id");
+        try {
+            for (int i = 0; i < savedNewsJson.length(); ++i) {
+                JSONObject jsontemp = new JSONObject(savedNewsJson.getString(i));
+                if(jsontemp.optString("id").equals(id)){
+                    savedNewsJson.remove(i);
+                    break;
+                }
+            }
+            editor.putString("SavedNews", savedNewsJson.toString());
+            editor.apply();
+            Toast.makeText(context,"\""+jsNews.optString("title")+"\" was removed from bookmarks",Toast.LENGTH_LONG).show();
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 }

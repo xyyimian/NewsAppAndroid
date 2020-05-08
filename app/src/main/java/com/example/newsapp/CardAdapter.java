@@ -71,27 +71,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         ImageView iv_cardBookmark;
         TextView tv_cardTitle,tv_cardTime,tv_cardSection;
         Card card;
+        String strNews;
 
         private void SaveNews(){
 
-            JSONObject news = new JSONObject();
-            try {
-                news.put("title", card.getTitle());
-                news.put("time", card.getTime());
-                news.put("section", card.getSection());
-                news.put("imgUrl", card.getImgurl());
-                news.put("id", card.getId());
-                savedNewsJson.put(news.toString());
+            JSONObject news = card2json(card);
+            strNews = news.toString();
+            savedNewsJson.put(news.toString());
 
-                editor.putString("SavedNews", savedNewsJson.toString());
-                editor.apply();
-                Toast.makeText(context,"\""+card.getTitle()+"\" was added to bookmarks",Toast.LENGTH_LONG).show();
-            }
-            catch (JSONException e){
-                e.printStackTrace();
-            }
-
-
+            editor.putString("SavedNews", savedNewsJson.toString());
+            editor.apply();
+            Toast.makeText(context,"\""+card.getTitle()+"\" was added to bookmarks",Toast.LENGTH_LONG).show();
         }
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         private void UnSaveNews(){
@@ -113,6 +103,20 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             catch (JSONException e){
                 e.printStackTrace();
             }
+        }
+
+        private JSONObject card2json(Card card){
+            JSONObject news = new JSONObject();
+            try {
+                news.put("title", card.getTitle());
+                news.put("time", card.getTime());
+                news.put("section", card.getSection());
+                news.put("imgUrl", card.getImgurl());
+                news.put("id", card.getId());
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+            return news;
         }
 
         public ViewHolder(@NonNull final View itemView) {
@@ -148,8 +152,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context,com.example.newsapp.DetailActivity.class);
-                    intent.putExtra("id",((Card)v.getTag()).getId());
-                    intent.putExtra("section",((Card)v.getTag()).getSection());
+
+                    intent.putExtra("news", strNews);
+                    boolean isSaved;
+                    if(iv_cardBookmark.getTag().toString().equals("0")){
+                        isSaved = false;
+                    }
+                    else{
+                        isSaved = true;
+                    }
+                    intent.putExtra("saved", isSaved);
+
+
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
