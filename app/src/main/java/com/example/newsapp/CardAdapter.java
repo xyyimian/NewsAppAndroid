@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -266,7 +267,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private static long[] getTime(LocalDateTime dob, LocalDateTime now) {
 //        LocalDateTime today = LocalDateTime.of(now.getYear(),
 //                now.getMonthValue(), now.getDayOfMonth(), dob.getHour(), dob.getMinute(), dob.getSecond());
-        Duration duration = Duration.between(dob, now);
+        Duration duration = Duration.between(dob, now.plusHours(8));
 
         long seconds = duration.getSeconds();
 
